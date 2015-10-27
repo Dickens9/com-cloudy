@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+   	
+   	<!-- 扫描注解Bean TODO 需要检查是否需要这里扫描注入-->
+   	<!-- <import resource="shiro-beans.xml"/> -->
+    <context:component-scan base-package="com.cloudy.client.**.remote.impl">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+<!-- 	<bean id="sessionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.cloudy.client.auth.mapper.SessionsMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean> -->
+	
+    <!-- 当前会话信息接口 -->
+    <bean id="uamSessionServiceClient" class="com.cloudy.client.auth.remote.impl.UamSessionServiceClient">
+    	<property name="uamCrossAppSessionServiceServer" ref="uamCrossAppSessionServiceClient" />
+    	<property name="uamUserOrgServiceClient" ref="uamUserOrgServiceClient" />
+    </bean>
+    
+    <!-- 当前跨应用信息接口 -->
+    <bean id="uamCrossAppSessionServiceClient" class="com.cloudy.client.auth.remote.impl.UamCrossAppSessionServiceClient">
+    	<property name="uamCrossAppSessionServiceServer">
+    		<bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+		        <property name="serviceUrl" value="${client.remote.service.url}/remote/uamCrossAppSessionService"/>
+		        <property name="serviceInterface" value="com.cloudy.uam.auth.remote.UamCrossAppSessionService"/>
+		    </bean>
+    	</property>
+    </bean>
+
+</beans>

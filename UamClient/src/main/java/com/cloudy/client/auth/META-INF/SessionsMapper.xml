@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudy.client.auth.mapper.SessionsMapper" >
+  <resultMap id="BaseResultMap" type="com.cloudy.client.auth.entity.Sessions" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="session" property="session" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.cloudy.client.auth.entity.Sessions" extends="BaseResultMap" >
+    <result column="SESSIONCLOB" property="sessionclob" jdbcType="CLOB" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, "session"
+  </sql>
+  <sql id="Blob_Column_List" >
+    SESSIONCLOB
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from TBSP.SESSIONS
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TBSP.SESSIONS
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cloudy.client.auth.entity.Sessions" >
+    insert into TBSP.SESSIONS (ID, "session", SESSIONCLOB
+      )
+    values (#{id,jdbcType=VARCHAR}, #{session,jdbcType=VARCHAR}, #{sessionclob,jdbcType=CLOB}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cloudy.client.auth.entity.Sessions" >
+    insert into TBSP.SESSIONS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="session != null" >
+        "session",
+      </if>
+      <if test="sessionclob != null" >
+        SESSIONCLOB,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="session != null" >
+        #{session,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionclob != null" >
+        #{sessionclob,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudy.client.auth.entity.Sessions" >
+    update TBSP.SESSIONS
+    <set >
+      <if test="session != null" >
+        "session" = #{session,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionclob != null" >
+        SESSIONCLOB = #{sessionclob,jdbcType=CLOB},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudy.client.auth.entity.Sessions" >
+    update TBSP.SESSIONS
+    set "session" = #{session,jdbcType=VARCHAR},
+      SESSIONCLOB = #{sessionclob,jdbcType=CLOB}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloudy.client.auth.entity.Sessions" >
+    update TBSP.SESSIONS
+    set "session" = #{session,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
